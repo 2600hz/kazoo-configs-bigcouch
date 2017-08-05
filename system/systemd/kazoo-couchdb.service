@@ -1,17 +1,18 @@
 [Unit]
-Description=BigCouch DB Configured for Kazoo
-After=syslog.target network.target
+Description=CouchDB Configured for Kazoo
+Wants=network-online.target
+After=network-online.target
 
 [Service]
 Type=forking
-User=bigcouch
-Group=daemon
+User=couchdb
+Group=couchdb
 PermissionsStartOnly=true
 LimitNOFILE=65536
 LimitCORE=infinity
-ExecStartPre=/usr/sbin/kazoo-bigcouch prepare
-ExecStart=/usr/sbin/kazoo-bigcouch background
-ExecStop=/usr/sbin/kazoo-bigcouch stop
+ExecStartPre=/usr/sbin/kazoo-couchdb prepare
+ExecStart=/usr/sbin/kazoo-couchdb background
+ExecStop=/usr/sbin/kazoo-couchdb stop
 Restart=on-abort
 
 [Install]
