@@ -23,7 +23,7 @@ start() {
 		success $"OK"
 		echo
 	else
-		failure $"Bigcouch is already running or failed to start!"
+		failure $"CouchDB is already running or failed to start!"
 		echo
 	fi
 }
@@ -37,7 +37,7 @@ stop() {
 		success $"OK"
 		echo
 	else 
-		failure $"Bigcouch is still running!"
+		failure $"CouchDB is still running!"
 		echo
 	fi
 }
