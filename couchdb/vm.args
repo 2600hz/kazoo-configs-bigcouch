@@ -25,6 +25,6 @@
 -kernel inet_dist_listen_min 11500 inet_dist_listen_max 11999
 
 # Comment this line out to enable the interactive Erlang shell on startup
-+Bd -noinput -detached
++Bd -noinput
 
 -couch_ini /opt/couchdb/etc/default.ini /etc/kazoo/couchdb/local.ini
