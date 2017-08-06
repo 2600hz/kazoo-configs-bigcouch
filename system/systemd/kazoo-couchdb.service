@@ -1,19 +1,16 @@
 [Unit]
-Description=CouchDB Configured for Kazoo
+Description=Apache CouchDB
 Wants=network-online.target
 After=network-online.target
 
 [Service]
-Type=forking
+RuntimeDirectory=couchdb
 User=couchdb
 Group=couchdb
-PermissionsStartOnly=true
 LimitNOFILE=65536
 LimitCORE=infinity
-ExecStartPre=/usr/sbin/kazoo-couchdb prepare
-ExecStart=/usr/sbin/kazoo-couchdb background
-ExecStop=/usr/sbin/kazoo-couchdb stop
-Restart=on-abort
+ExecStart=/opt/couchdb/bin/couchdb
+Restart=always
 
 [Install]
 WantedBy=multi-user.target
