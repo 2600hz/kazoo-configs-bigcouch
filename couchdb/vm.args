@@ -2,7 +2,7 @@
 # (specified using -sname) or it can by fully qualified (-name).  There can be
 # no communication between nodes running with the -sname flag and those running 
 # with the -name flag.
--name bigcouch
+-name couchdb
 
 # All nodes must share the same magic cookie for distributed Erlang to work.
 # Comment out this line if you synchronized the cookies by other means (using
@@ -25,6 +25,6 @@
 -kernel inet_dist_listen_min 11500 inet_dist_listen_max 11999
 
 # Comment this line out to enable the interactive Erlang shell on startup
-+Bd -noinput -detached
++Bd -noinput
 
--couch_ini /opt/bigcouch/etc/default.ini /etc/kazoo/bigcouch/local.ini
+-couch_ini /opt/couchdb/etc/default.ini /etc/kazoo/couchdb/local.ini
