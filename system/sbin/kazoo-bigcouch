@@ -11,6 +11,7 @@ fi
 RETVAL=1
 USER=${BIGCOUCH_USER:-bigcouch}
 BIN_FILE=${BIGCOUCH_BIN:-/opt/bigcouch/bin/bigcouch}
+CREDS_FILE=/etc/kazoo/bigcouch/env
 PID_FILE=${BIGCOUCH_PID:-/var/run/bigcouch/kazoo-bigcouch.pid}
 export HOME=${BIGCOUCH_HOME:-/srv}
 
@@ -31,7 +32,7 @@ prepare() {
 	chown -R ${USER} /var/run/bigcouch
 	if [ -e ${PID_FILE} ]; then
 		rm -rf ${PID_FILE}
-	fi 
+	fi
 	RETVAL=$?
 }
 
@@ -45,7 +46,7 @@ start() {
 		runuser -s /bin/bash ${USER} -c "$*"
 	fi
 	RETVAL=$?
-	
+
 	if [ ${RETVAL} -ne 0 ]; then
 		echo "Failed to start BigCouch!"
 		RETVAL=1
@@ -67,11 +68,18 @@ restart() {
 }
 
 status() {
+    if [[ -f $CREDS_FILE ]]; then
+        PASSWORD=$(cat $CREDS_FILE)
+    fi
 	for i in `pidof ${BEAM}`; do
 		if cat /proc/$i/cmdline | grep -Eq "name[^\-]+bigcouch"; then
 			echo "BigCouch (pid $i) is running..."
 			if which curl &>/dev/null; then
-				curl localhost:5984/_membership
+                if [[ -z $PASSWORD ]]; then
+                    curl localhost:5984/_membership
+                else
+                    curl localhost:5984/_membership -H "Authorization: Basic ${PASSWORD}"
+                fi
 			fi
 			RETVAL=0
 		fi
