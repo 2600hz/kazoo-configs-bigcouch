@@ -1,6 +1,7 @@
 name: kazoo-configs-bigcouch
 base_branch: origin/5.1
 base_core: null
+exposure: private
 template: spec.tmpl
 package:
   centos7:
