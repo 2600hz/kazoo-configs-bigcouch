@@ -54,12 +54,10 @@ start() {
 }
 
 stop() {
-	for i in `pidof ${BEAM}`; do
-		if cat /proc/$i/cmdline | grep -Eq "name[^\-]+bigcouch"; then
-			kill $i
-			RETVAL=$?
-		fi
-	done
+	if PID=$(find_beam_pid); then
+		kill "$PID"
+		RETVAL=$?
+	fi
 }
 
 restart() {
@@ -71,34 +69,41 @@ status() {
     if [[ -f $CREDS_FILE ]]; then
         PASSWORD=$(cat $CREDS_FILE)
     fi
-	for i in `pidof ${BEAM}`; do
-		if cat /proc/$i/cmdline | grep -Eq "name[^\-]+bigcouch"; then
-			echo "BigCouch (pid $i) is running..."
-			if which curl &>/dev/null; then
-                if [[ -z $PASSWORD ]]; then
-                    curl localhost:5984/_membership
-                else
-                    curl localhost:5984/_membership -H "Authorization: Basic ${PASSWORD}"
-                fi
+	if PID=$(find_beam_pid); then
+		echo "BigCouch (pid $PID) is running..."
+
+		if which curl &>/dev/null; then
+			if [[ -z $PASSWORD ]]; then
+				curl localhost:5984/_membership
+			else
+				curl localhost:5984/_membership -H "Authorization: Basic ${PASSWORD}"
 			fi
-			RETVAL=0
 		fi
-	done
+
+		RETVAL=0
+	fi
 	if [ ${RETVAL} -eq 1 ]; then
 		echo "BigCouch is not running!"
 	fi
 }
 
 pid() {
-        for i in `pidof ${BEAM}`; do
-                if cat /proc/$i/cmdline | grep -Eq "name[^\-]+bigcouch"; then
-			echo $i
-                        RETVAL=0
-                fi
-        done
+	find_beam_pid
+	RETVAL=$?
 	if [ ${RETVAL} -eq 1 ]; then
 		echo "BigCouch is not running!"
 	fi
+}
+
+find_beam_pid() {
+	for PID in $(pidof $BEAM); do
+		if tr '\0' ' ' < /proc/"$PID"/cmdline | grep -Eq "name[^\-]+bigcouch"; then
+			echo "$PID"
+			return 0
+		fi
+	done
+
+	return 1
 }
 
 case "$1" in
