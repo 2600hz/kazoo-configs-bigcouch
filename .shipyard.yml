@@ -1,6 +1,7 @@
 name: kazoo-configs-bigcouch
-base_branch: origin/master
+custom_files: null
 exposure: private
+base_branch: origin/5.2
 base_core: null
 template: spec.tmpl
 package:
@@ -11,7 +12,7 @@ package:
     build_arch: noarch
     build_requires:
       - rpm-build
-    summary: Kazoo specific configuration for BigCouch
+    summary: 'Kazoo specific configuration for BigCouch'
     description: |
       A clustered version of CouchDB, BigCouch provides the
       persistent data store service for the Kazoo platform.
@@ -20,7 +21,7 @@ package:
       dev mailing list or on IRC at #2600hz on FreeNode.
     dist: .el7.centos
     requires:
-      sudo: {}
+      sudo: {  }
     source: '%{_build_tar}'
     prep: '%setup -q'
     install: |
@@ -45,12 +46,15 @@ package:
         - CHANGELOG
         - VERSION
       config:
-        - mode: noreplace
+        -
+          mode: noreplace
           path: /etc/kazoo/bigcouch
-        - mode: noreplace
-          path: /etc/logrotate.d/*bigcouch*
-        - mode: noreplace
-          path: /etc/security/limits.d/*bigcouch*
+        -
+          mode: noreplace
+          path: '/etc/logrotate.d/*bigcouch*'
+        -
+          mode: noreplace
+          path: '/etc/security/limits.d/*bigcouch*'
       path:
         - /usr/sbin/kazoo-bigcouch
         - /usr/lib/systemd/system/kazoo-bigcouch.service
@@ -61,4 +65,5 @@ metapackage:
     name: meta-kazoo-bigcouch
     package: kazoo-configs-bigcouch
     type: required
-    branch: 'master'
+    branch: '5.2'
+dependencies: null
